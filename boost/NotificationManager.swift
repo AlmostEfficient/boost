@@ -7,35 +7,32 @@ enum NotificationManager {
             .requestAuthorization(options: [.alert, .sound, .badge])
     }
 
-    static func scheduleAll(stacks: [Stack]) {
+    static func scheduleAll(stacks: [Stack], settings: NotificationSettings) {
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
 
         for stack in stacks {
-            for time in stack.triggerTimes {
-                let parts = time.split(separator: ":").compactMap { Int($0) }
-                guard parts.count == 2 else { continue }
+            guard settings.enabled[stack.id] == true else { continue }
 
-                let content = UNMutableNotificationContent()
-                content.title = "\(stack.emoji) \(stack.name)"
-                content.body = stack.description
-                content.sound = .default
+            let time = settings.time(for: stack.id)
+            let c = Calendar.current.dateComponents([.hour, .minute], from: time)
 
-                var components = DateComponents()
-                components.hour = parts[0]
-                components.minute = parts[1]
+            let content = UNMutableNotificationContent()
+            content.title = "\(stack.emoji) \(stack.name)"
+            content.body = stack.description
+            content.sound = .default
 
-                let trigger = UNCalendarNotificationTrigger(
-                    dateMatching: components,
-                    repeats: true
-                )
-                let request = UNNotificationRequest(
-                    identifier: "\(stack.id)-\(time)",
-                    content: content,
-                    trigger: trigger
-                )
-                center.add(request)
-            }
+            var components = DateComponents()
+            components.hour = c.hour
+            components.minute = c.minute
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+            let request = UNNotificationRequest(
+                identifier: stack.id,
+                content: content,
+                trigger: trigger
+            )
+            center.add(request)
         }
     }
 }

@@ -2,23 +2,20 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(AppState.self) var state
+    @Environment(NotificationSettings.self) var notifSettings
 
     var body: some View {
         TabView {
             MainView()
-                .tabItem {
-                    Label("Now", systemImage: "bolt.fill")
-                }
+                .tabItem { Label("Now", systemImage: "bolt.fill") }
 
             LogView()
-                .tabItem {
-                    Label("Log", systemImage: "list.bullet")
-                }
+                .tabItem { Label("Log", systemImage: "list.bullet") }
         }
         .tint(.white)
         .task {
             await NotificationManager.requestPermission()
-            NotificationManager.scheduleAll(stacks: state.data.stacks)
+            NotificationManager.scheduleAll(stacks: state.data.stacks, settings: notifSettings)
         }
     }
 }

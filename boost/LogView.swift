@@ -4,6 +4,7 @@ import SwiftData
 struct LogView: View {
     @Query(sort: \StackLog.timestamp, order: .reverse) private var logs: [StackLog]
     @Environment(\.modelContext) private var modelContext
+    @State private var showingSettings = false
 
     var body: some View {
         NavigationStack {
@@ -24,13 +25,19 @@ struct LogView: View {
                         .tracking(4)
                         .foregroundStyle(.white)
                 }
-
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        showingSettings = true
+                    } label: {
+                        Image(systemName: "bell")
+                            .font(.system(size: 15))
+                            .foregroundStyle(Theme.secondary)
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !logs.isEmpty {
                         Button {
-                            withAnimation {
-                                logs.forEach { modelContext.delete($0) }
-                            }
+                            withAnimation { logs.forEach { modelContext.delete($0) } }
                         } label: {
                             Text("Clear")
                                 .font(.system(size: 13))
@@ -38,6 +45,9 @@ struct LogView: View {
                         }
                     }
                 }
+            }
+            .sheet(isPresented: $showingSettings) {
+                NotificationSettingsSheet()
             }
         }
     }
@@ -78,7 +88,6 @@ struct LogView: View {
         .scrollIndicators(.hidden)
     }
 
-    // Group by calendar day
     private var groupedLogs: [(String, [StackLog])] {
         let fmt = DateFormatter()
         fmt.dateFormat = "yyyy-MM-dd"
@@ -117,7 +126,6 @@ struct LogView: View {
                 .font(.system(size: 10, weight: .semibold, design: .monospaced))
                 .tracking(2)
                 .foregroundStyle(Theme.tertiary)
-
             Spacer()
         }
         .padding(.horizontal, 20)
@@ -126,17 +134,132 @@ struct LogView: View {
     }
 }
 
+// MARK: - Notification Settings Sheet
+
+struct NotificationSettingsSheet: View {
+    @Environment(AppState.self) var appState
+    @Environment(NotificationSettings.self) var settings
+    @Environment(\.dismiss) var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Theme.bg.ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: 2) {
+                        ForEach(appState.data.stacks) { stack in
+                            NotifStackRow(stack: stack)
+                        }
+                    }
+                    .padding(.top, 8)
+                    .padding(.bottom, 40)
+                }
+                .scrollIndicators(.hidden)
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("NOTIFICATIONS")
+                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                        .tracking(4)
+                        .foregroundStyle(.white)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        settings.save()
+                        NotificationManager.scheduleAll(stacks: appState.data.stacks, settings: settings)
+                        dismiss()
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white)
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationBackground(Theme.bg)
+    }
+}
+
+struct NotifStackRow: View {
+    @Environment(NotificationSettings.self) var settings
+    let stack: Stack
+
+    var isEnabled: Bool { settings.enabled[stack.id] == true }
+    var accent: Color { Theme.accent(for: stack.accentColor) }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 12) {
+                Text(stack.emoji)
+                    .font(.system(size: 20))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(stack.name)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(.white)
+
+                    Text(stack.description)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.tertiary)
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                Toggle("", isOn: Binding(
+                    get: { settings.enabled[stack.id] ?? false },
+                    set: { settings.enabled[stack.id] = $0 }
+                ))
+                .tint(accent)
+                .labelsHidden()
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 14)
+
+            if isEnabled {
+                HStack {
+                    Text("Notify at")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Theme.secondary)
+
+                    Spacer()
+
+                    DatePicker(
+                        "",
+                        selection: Binding(
+                            get: { settings.time(for: stack.id) },
+                            set: { settings.setTime($0, for: stack.id) }
+                        ),
+                        displayedComponents: .hourAndMinute
+                    )
+                    .labelsHidden()
+                    .colorScheme(.dark)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(Theme.card)
+            }
+
+            Divider()
+                .background(Theme.separator)
+                .padding(.leading, 20)
+        }
+        .animation(.spring(duration: 0.25), value: isEnabled)
+    }
+}
+
+// MARK: - Log Row
+
 struct LogRow: View {
     let entry: StackLog
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
-            VStack(alignment: .trailing, spacing: 2) {
-                Text(entry.timestamp, format: .dateTime.hour().minute())
-                    .font(.system(size: 12, weight: .medium, design: .monospaced))
-                    .foregroundStyle(Theme.secondary)
-            }
-            .frame(width: 44)
+            Text(entry.timestamp, format: .dateTime.hour().minute())
+                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                .foregroundStyle(Theme.secondary)
+                .frame(width: 44)
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
@@ -150,7 +273,7 @@ struct LogRow: View {
 
                 if !entry.supplementNames.isEmpty {
                     Text(entry.supplementNames.joined(separator: "  ·  "))
-                        .font(.system(size: 11, weight: .regular))
+                        .font(.system(size: 11))
                         .foregroundStyle(Theme.tertiary)
                         .lineLimit(2)
                 }

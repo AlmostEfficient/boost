@@ -55,11 +55,6 @@ struct ContextButton: View {
                     .minimumScaleFactor(0.8)
 
                 Spacer()
-
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 11, weight: .bold))
-                }
             }
             .foregroundStyle(isSelected ? .black : .white)
             .padding(.horizontal, 14)
