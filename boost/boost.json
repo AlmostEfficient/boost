@@ -1,0 +1,252 @@
+{
+  "app": "Boost",
+  "version": "1.0",
+  "supplements": {
+    "alpha_gpc": {
+      "name": "Alpha GPC",
+      "dose": "300mg",
+      "capsules": 1,
+      "category": "cholinergic",
+      "notes": "Take with food if possible"
+    },
+    "alcar": {
+      "name": "Acetyl L-Carnitine",
+      "dose": "500mg",
+      "capsules": 1,
+      "category": "cholinergic_support"
+    },
+    "l_tyrosine": {
+      "name": "L-Tyrosine",
+      "dose": "500mg",
+      "capsules": 1,
+      "category": "dopaminergic"
+    },
+    "l_theanine": {
+      "name": "L-Theanine",
+      "dose": "400mg",
+      "capsules": 1,
+      "category": "calming"
+    },
+    "rhodiola": {
+      "name": "Rhodiola Rosea",
+      "dose": "500mg",
+      "capsules": 1,
+      "category": "adaptogen",
+      "cycling": {
+        "on_days": 5,
+        "off_days": 2
+      }
+    },
+    "ttfd_b1": {
+      "name": "TTFD B1",
+      "dose": "100mg",
+      "capsules": 1,
+      "category": "metabolic"
+    },
+    "taurine": {
+      "name": "Taurine",
+      "dose": "500mg",
+      "capsules": 1,
+      "category": "buffer"
+    },
+    "nac": {
+      "name": "NAC",
+      "dose": "600mg",
+      "capsules": 1,
+      "category": "antioxidant"
+    },
+    "bacopa": {
+      "name": "Bacopa Monnieri",
+      "dose": "500mg",
+      "capsules": 1,
+      "category": "neuroplasticity",
+      "notes": "Cumulative effect over weeks, take daily"
+    },
+    "lions_mane": {
+      "name": "Lion's Mane",
+      "dose": "2100mg",
+      "capsules": 1,
+      "category": "neuroplasticity",
+      "notes": "Cumulative effect, take daily"
+    },
+    "ginkgo": {
+      "name": "Ginkgo Biloba",
+      "dose": "1000mg",
+      "capsules": 1,
+      "category": "cerebral_flow"
+    },
+    "magnesium": {
+      "name": "Magnesium Glycinate",
+      "dose": "400mg",
+      "capsules": 1,
+      "category": "calming"
+    },
+    "creatine": {
+      "name": "Creatine",
+      "dose": "5g",
+      "capsules": 1,
+      "category": "daily"
+    },
+    "iron": {
+      "name": "Ferro-F-Tab",
+      "dose": "310mg",
+      "capsules": 1,
+      "category": "daily",
+      "notes": "Take fasted with orange juice"
+    },
+    "vitamin_c": {
+      "name": "Vitamin C",
+      "dose": "500mg",
+      "capsules": 1,
+      "category": "daily"
+    },
+    "collagen": {
+      "name": "Marine Collagen",
+      "dose": "standard",
+      "capsules": 1,
+      "category": "daily",
+      "notes": "Take with Vitamin C"
+    },
+    "hair_nails_skin": {
+      "name": "Blackmores Hair, Nails & Skin",
+      "dose": "1 tablet",
+      "capsules": 1,
+      "category": "daily"
+    }
+  },
+  "stacks": [
+    {
+      "id": "morning_baseline",
+      "name": "Morning Baseline",
+      "emoji": "🌅",
+      "state": "daily",
+      "description": "First thing, fasted",
+      "trigger_times": ["07:00", "08:00"],
+      "supplements": ["iron"],
+      "notes": "Iron + OJ only. Nothing else competes with absorption."
+    },
+    {
+      "id": "daily_lunch",
+      "name": "Daily Stack",
+      "emoji": "🥗",
+      "state": "daily",
+      "description": "With lunch, every day no matter what",
+      "trigger_times": ["12:00", "13:00"],
+      "supplements": ["bacopa", "lions_mane", "nac", "ginkgo", "hair_nails_skin", "creatine", "collagen", "vitamin_c"]
+    },
+    {
+      "id": "deep_work",
+      "name": "Deep Work",
+      "emoji": "🔒",
+      "state": "performance",
+      "description": "Proactive, planned coding session",
+      "trigger_times": ["09:00", "10:00", "14:00"],
+      "supplements": ["alpha_gpc", "alcar", "ttfd_b1", "l_tyrosine"],
+      "optional": ["rhodiola"]
+    },
+    {
+      "id": "lock_in",
+      "name": "Lock In",
+      "emoji": "🚀",
+      "state": "performance",
+      "description": "Late urgent session — compensating for lost day",
+      "trigger_times": ["18:00", "19:00", "20:00"],
+      "supplements": ["alpha_gpc", "l_tyrosine", "taurine"],
+      "notes": "No Rhodiola this late. Keep it clean so you can sleep."
+    },
+    {
+      "id": "doom_loop_exit",
+      "name": "Exit the Loop",
+      "emoji": "⚡",
+      "state": "reset",
+      "description": "Anxious, overthinking, want to get something done",
+      "trigger_times": ["14:00", "15:00", "16:00"],
+      "supplements": ["l_theanine", "l_tyrosine"],
+      "notes": "Calms the noise, gives direction. Not a full performance stack."
+    },
+    {
+      "id": "screen_exit",
+      "name": "Close the Laptop",
+      "emoji": "🚪",
+      "state": "behavioural",
+      "description": "Stuck at screen, want to leave",
+      "trigger_times": ["11:00", "15:00", "18:00"],
+      "supplements": [],
+      "notes": "No supplements. Just a nudge. Go outside."
+    },
+    {
+      "id": "sustained_output",
+      "name": "Sustained Output",
+      "emoji": "🔋",
+      "state": "performance",
+      "description": "Long day ahead, no crash, steady flow",
+      "trigger_times": ["09:00", "10:00"],
+      "supplements": ["alpha_gpc", "rhodiola", "taurine", "alcar"]
+    },
+    {
+      "id": "dance_class",
+      "name": "Dance Class",
+      "emoji": "💃",
+      "state": "social",
+      "description": "Bachata, movement, presence",
+      "trigger_times": ["17:00", "18:00", "19:00"],
+      "supplements": ["l_theanine", "l_tyrosine"],
+      "optional": ["magnesium"]
+    },
+    {
+      "id": "night_out",
+      "name": "Night Out",
+      "emoji": "🌙",
+      "state": "social",
+      "description": "Going out, rave, social event",
+      "trigger_times": ["20:00", "21:00"],
+      "supplements": ["l_theanine", "l_tyrosine", "magnesium"],
+      "notes": "Magnesium helps with muscle fatigue if dancing hard."
+    }
+  ],
+  "time_defaults": [
+    { "time": "07:00", "default_stack": "morning_baseline" },
+    { "time": "08:00", "default_stack": "morning_baseline" },
+    { "time": "12:00", "default_stack": "daily_lunch" },
+    { "time": "13:00", "default_stack": "daily_lunch" },
+    { "time": "14:00", "default_stack": "doom_loop_exit" },
+    { "time": "15:00", "default_stack": "doom_loop_exit" },
+    { "time": "16:00", "default_stack": "sustained_output" },
+    { "time": "18:00", "default_stack": "lock_in" },
+    { "time": "19:00", "default_stack": "dance_class" },
+    { "time": "20:00", "default_stack": "night_out" },
+    { "time": "21:00", "default_stack": "night_out" }
+  ],
+  "context_modifiers": [
+    {
+      "id": "deep_work",
+      "label": "Deep Work",
+      "overrides_stack": "deep_work"
+    },
+    {
+      "id": "doom_loop",
+      "label": "Exit Doom Loop",
+      "overrides_stack": "doom_loop_exit"
+    },
+    {
+      "id": "lock_in",
+      "label": "Lock In",
+      "overrides_stack": "lock_in"
+    },
+    {
+      "id": "dance",
+      "label": "Dance / Movement",
+      "overrides_stack": "dance_class"
+    },
+    {
+      "id": "night_out",
+      "label": "Night Out",
+      "overrides_stack": "night_out"
+    },
+    {
+      "id": "leave_screen",
+      "label": "Close the Laptop",
+      "overrides_stack": "screen_exit"
+    }
+  ]
+}
