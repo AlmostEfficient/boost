@@ -21,16 +21,16 @@ struct LogView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("LOG")
-                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
-                        .tracking(4)
-                        .foregroundStyle(.white)
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .tracking(5)
+                        .foregroundStyle(.white.opacity(0.6))
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
                         showingSettings = true
                     } label: {
                         Image(systemName: "bell")
-                            .font(.system(size: 15))
+                            .font(.system(size: 14))
                             .foregroundStyle(Theme.secondary)
                     }
                 }
@@ -53,26 +53,35 @@ struct LogView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
-            Text("—")
-                .font(.system(size: 40))
-                .foregroundStyle(Theme.tertiary)
+        VStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(Theme.card)
+                    .frame(width: 56, height: 56)
 
-            Text("Nothing logged yet")
-                .font(.system(size: 16, weight: .medium))
-                .foregroundStyle(Theme.secondary)
+                Image(systemName: "list.bullet")
+                    .font(.system(size: 22))
+                    .foregroundStyle(Theme.tertiary)
+            }
 
-            Text("Hit \"boosted!\" on the main screen\nto start your log.")
-                .font(.system(size: 13))
-                .foregroundStyle(Theme.tertiary)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 6) {
+                Text("Nothing logged yet")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Theme.secondary)
+
+                Text("Hit \"boosted!\" on the main screen\nto start your log.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(Theme.tertiary)
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(3)
+            }
         }
         .padding(40)
     }
 
     private var logList: some View {
         ScrollView {
-            LazyVStack(spacing: 1) {
+            LazyVStack(spacing: 0) {
                 ForEach(groupedLogs, id: \.0) { (day, entries) in
                     Section {
                         ForEach(entries) { entry in
@@ -121,16 +130,19 @@ struct LogView: View {
             return displayFmt.string(from: date)
         }()
 
-        return HStack {
+        return HStack(spacing: 12) {
             Text(label.uppercased())
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
                 .tracking(2)
                 .foregroundStyle(Theme.tertiary)
-            Spacer()
+
+            Rectangle()
+                .fill(Theme.separator)
+                .frame(height: 1)
         }
         .padding(.horizontal, 20)
-        .padding(.top, 24)
-        .padding(.bottom, 8)
+        .padding(.top, 28)
+        .padding(.bottom, 10)
     }
 }
 
@@ -161,9 +173,9 @@ struct NotificationSettingsSheet: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("NOTIFICATIONS")
-                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
-                        .tracking(4)
-                        .foregroundStyle(.white)
+                        .font(.system(size: 11, weight: .bold, design: .monospaced))
+                        .tracking(3)
+                        .foregroundStyle(.white.opacity(0.6))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
@@ -190,7 +202,7 @@ struct NotifStackRow: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 12) {
+            HStack(spacing: 14) {
                 Text(stack.emoji)
                     .font(.system(size: 20))
 
@@ -241,8 +253,9 @@ struct NotifStackRow: View {
                 .background(Theme.card)
             }
 
-            Divider()
-                .background(Theme.separator)
+            Rectangle()
+                .fill(Theme.separator)
+                .frame(height: 1)
                 .padding(.leading, 20)
         }
         .animation(.spring(duration: 0.25), value: isEnabled)
@@ -255,16 +268,22 @@ struct LogRow: View {
     let entry: StackLog
 
     var body: some View {
-        HStack(alignment: .top, spacing: 14) {
+        HStack(alignment: .center, spacing: 14) {
+            // Time column
             Text(entry.timestamp, format: .dateTime.hour().minute())
-                .font(.system(size: 12, weight: .medium, design: .monospaced))
-                .foregroundStyle(Theme.secondary)
-                .frame(width: 44)
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .foregroundStyle(Theme.tertiary)
+                .frame(width: 40, alignment: .leading)
+
+            // Thin vertical separator
+            Rectangle()
+                .fill(Theme.separator)
+                .frame(width: 1, height: 32)
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text(entry.stackEmoji)
-                        .font(.system(size: 14))
+                        .font(.system(size: 13))
 
                     Text(entry.stackName)
                         .font(.system(size: 14, weight: .semibold))
@@ -283,6 +302,5 @@ struct LogRow: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
-        .background(Theme.bg)
     }
 }

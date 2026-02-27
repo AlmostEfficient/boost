@@ -6,9 +6,9 @@ struct ContextChipsView: View {
     let columns = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("WHAT'S THE SITUATION")
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
                 .tracking(2)
                 .foregroundStyle(Theme.tertiary)
                 .padding(.horizontal, 20)
@@ -46,7 +46,7 @@ struct ContextButton: View {
             HStack(spacing: 10) {
                 if let emoji = targetStack?.emoji {
                     Text(emoji)
-                        .font(.system(size: 20))
+                        .font(.system(size: 18))
                 }
 
                 Text(modifier.label)
@@ -58,17 +58,24 @@ struct ContextButton: View {
             }
             .foregroundStyle(isSelected ? .black : .white)
             .padding(.horizontal, 14)
-            .padding(.vertical, 14)
+            .padding(.vertical, 15)
             .frame(maxWidth: .infinity)
-            .background(
-                isSelected ? accent : Theme.card,
-                in: RoundedRectangle(cornerRadius: 14, style: .continuous)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .strokeBorder(isSelected ? .clear : Theme.separator, lineWidth: 1)
+            .background {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(isSelected ? accent : Theme.card)
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(
+                        isSelected ? accent.opacity(0.0) : Theme.separator,
+                        lineWidth: 1
+                    )
+            }
+            .shadow(
+                color: isSelected ? accent.opacity(0.22) : .clear,
+                radius: 10, y: 4
             )
         }
-        .animation(.spring(duration: 0.2), value: isSelected)
+        .animation(.spring(duration: 0.25), value: isSelected)
     }
 }
