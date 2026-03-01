@@ -30,7 +30,7 @@ struct LogView: View {
                         showingSettings = true
                     } label: {
                         Image(systemName: "bell")
-                            .font(.system(size: 14))
+                            .font(.system(size: 15))
                             .foregroundStyle(Theme.secondary)
                     }
                 }
@@ -50,6 +50,9 @@ struct LogView: View {
                 NotificationSettingsSheet()
             }
         }
+        .presentationDetents([.medium, .large])
+        .presentationBackground(Theme.bg)
+        .presentationDragIndicator(.visible)
     }
 
     private var emptyState: some View {

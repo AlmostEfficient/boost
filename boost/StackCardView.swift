@@ -3,6 +3,7 @@ import SwiftUI
 struct StackCardView: View {
     @Environment(AppState.self) var state
     var logAction: () -> Void
+    var hasLogged: Bool = false
 
     var body: some View {
         let stack = state.currentStack
@@ -156,7 +157,7 @@ struct StackCardView: View {
         Button {
             logAction()
         } label: {
-            Text("boosted!")
+            Text(hasLogged ? "boosted!" : "boost")
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(.black)
                 .frame(maxWidth: .infinity)
@@ -168,6 +169,7 @@ struct StackCardView: View {
                 )
         }
         .padding(.top, 10)
+        .animation(.spring(duration: 0.2), value: hasLogged)
     }
 }
 

@@ -88,12 +88,13 @@ struct Stack: Identifiable {
         case .social:      return .social
         case .behavioural: return .behavioural
         case .daily:       return .daily
+        case .recovery:    return .recovery
         }
     }
 }
 
 enum StackState: Equatable {
-    case performance, reset, social, behavioural, daily
+    case performance, reset, social, behavioural, daily, recovery
 
     var label: String {
         switch self {
@@ -102,6 +103,7 @@ enum StackState: Equatable {
         case .social:      return "SOCIAL"
         case .behavioural: return "BEHAVIOURAL"
         case .daily:       return "DAILY"
+        case .recovery:    return "RECOVERY"
         }
     }
 }
@@ -124,5 +126,5 @@ struct ContextModifier: Identifiable {
 // MARK: - Stack color (for theming)
 
 enum StackColor {
-    case performance, reset, social, behavioural, daily
+    case performance, reset, social, behavioural, daily, recovery
 }

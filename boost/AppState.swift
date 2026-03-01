@@ -6,9 +6,20 @@ class AppState {
     let data: BoostData
     var selectedContextId: String? = nil
     var enabledOptionals: Set<String> = []
+    var dailyLoggedToday: Bool
 
     init(data: BoostData) {
         self.data = data
+        if let lastDate = UserDefaults.standard.object(forKey: "dailyLoggedDate") as? Date {
+            self.dailyLoggedToday = Calendar.current.isDateInToday(lastDate)
+        } else {
+            self.dailyLoggedToday = false
+        }
+    }
+
+    func markDailyLogged() {
+        UserDefaults.standard.set(Date(), forKey: "dailyLoggedDate")
+        dailyLoggedToday = true
     }
 
     var currentStack: Stack {
@@ -16,6 +27,10 @@ class AppState {
            let modifier = data.contextModifiers.first(where: { $0.id == contextId }),
            let stack = data.stacks.first(where: { $0.id == modifier.overridesStack }) {
             return stack
+        }
+        if !dailyLoggedToday,
+           let daily = data.stacks.first(where: { $0.id == "daily_lunch" }) {
+            return daily
         }
         return timeBasedStack
     }

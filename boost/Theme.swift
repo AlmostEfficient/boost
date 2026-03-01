@@ -15,6 +15,7 @@ enum Theme {
         case .social:      return Color(red: 0.62, green: 0.88, blue: 0.72)
         case .behavioural: return Color.white.opacity(0.30)
         case .daily:       return Color.white
+        case .recovery:    return Color(red: 0.72, green: 0.58, blue: 0.92)
         }
     }
 

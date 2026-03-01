@@ -5,6 +5,7 @@ struct MainView: View {
     @Environment(AppState.self) var state
     @Environment(\.modelContext) private var modelContext
     @State private var loggedConfirm = false
+    @State private var showingLog = false
 
     var body: some View {
         NavigationStack {
@@ -35,7 +36,7 @@ struct MainView: View {
                         .padding(.bottom, 16)
 
                     ScrollView {
-                        StackCardView(logAction: logCurrentStack)
+                        StackCardView(logAction: logCurrentStack, hasLogged: loggedConfirm)
                             .padding(.horizontal, 16)
                             .padding(.bottom, 12)
 
@@ -53,6 +54,18 @@ struct MainView: View {
                         .tracking(5)
                         .foregroundStyle(.white.opacity(0.6))
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingLog = true
+                    } label: {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.system(size: 16))
+                            .foregroundStyle(Theme.secondary)
+                    }
+                }
+            }
+            .sheet(isPresented: $showingLog) {
+                LogView()
             }
         }
         .overlay(alignment: .top) {
@@ -67,10 +80,6 @@ struct MainView: View {
     private var headerView: some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(Date(), format: .dateTime.hour().minute())
-                    .font(.system(size: 38, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-
                 if state.selectedContextId != nil {
                     HStack(spacing: 6) {
                         Text("OVERRIDE")
@@ -151,6 +160,10 @@ struct MainView: View {
             supplementNames: supplementNames
         )
         modelContext.insert(log)
+
+        if state.currentStack.id == "daily_lunch" {
+            state.markDailyLogged()
+        }
 
         if state.activeSupplementIds.contains("rhodiola") {
             RhodiolaTracker.markTakenToday()
