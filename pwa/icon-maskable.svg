@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Full bleed background for maskable icon -->
+  <rect width="192" height="192" fill="#08080F"/>
+  <!-- Centered content within the safe zone (roughly 60px inset on each side = 72x72 area centered) -->
+  <circle cx="96" cy="96" r="44" fill="none" stroke="#A855F7" stroke-width="5" opacity="0.7"/>
+  <path d="M72 96 L88 112 L120 78" stroke="#A855F7" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
